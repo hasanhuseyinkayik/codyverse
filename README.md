@@ -7,7 +7,7 @@ Hasan Hüseyin KAYIK - 21040523
 
 | Hafta | Tarih | Video Bağlantısı |
 | :--- | :--- | :--- |
-| **1. Hafta** | 23.03.2026 | [🔗 Video](https://www.youtube.com/watch?v=sEEcYnMdA-s) |
+| **1. Hafta** | 23.03.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-23032026-V1](https://www.youtube.com/watch?v=sEEcYnMdA-s) |
 
 ---
 
