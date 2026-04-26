@@ -1,4 +1,5 @@
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 const modules = [
   { id: 1, title: 'Variables', status: 'completed' },
@@ -8,13 +9,21 @@ const modules = [
 ];
 
 export default function JourneyScreen() {
+  const router = useRouter();
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.center}>
       {modules.map((mod, index) => (
         <View key={mod.id} style={styles.nodeWrapper}>
           <TouchableOpacity
             style={[styles.node, mod.status === 'locked' && styles.locked]}
-            onPress={() => alert(`${mod.title} dersi açılıyor...`)}
+            onPress={() => {
+              if (mod.status !== 'locked') {
+                router.push('/editor');
+              } else {
+                alert(`${mod.title} dersi henüz kilitli!`);
+              }
+            }}
           >
             <Text style={styles.nodeText}>{mod.id}</Text>
           </TouchableOpacity>

@@ -6,7 +6,7 @@ export default function ProfileScreen() {
       {/* Profil Fotoğrafı Alanı */}
       <View style={styles.avatarPlaceholder} />
 
-      <Text style={styles.userName}>Hasan Hüseyin Kayık</Text>
+      <Text style={styles.userName}>Hasan Hüseyin Kayıka</Text>
       <Text style={styles.university}>Ankara Üniversitesi</Text>
 
       {/* İstatitstikler - Raporundaki Puanlama Sistemi */}
