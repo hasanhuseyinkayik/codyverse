@@ -19,7 +19,8 @@ export default function JourneyScreen() {
             style={[styles.node, mod.status === 'locked' && styles.locked]}
             onPress={() => {
               if (mod.status !== 'locked') {
-                router.push('/editor');
+                  // modül ID'si parametre olarak gönderilecek
+                router.push({ pathname: '/modal', params: { id: mod.id } });
               } else {
                 alert(`${mod.title} dersi henüz kilitli!`);
               }
