@@ -9,6 +9,7 @@ Hasan Hüseyin KAYIK - 21040523
 | :--- | :--- | :--- |
 | **1. Hafta** | 23.03.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-23032026-V1](https://www.youtube.com/watch?v=sEEcYnMdA-s) |
 | **2. Hafta** | 29.03.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-29032026-V2](https://www.youtube.com/watch?v=9QD9gnPqa7A) |
+| **3. Hafta** | 26.04.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-26042026-V3](https://www.youtube.com/watch?v=hcNHJQ3PawU) |
 
 ---
 
@@ -53,3 +54,14 @@ Leaderboard -> Bu kısımda kullanıcılar kazandıkları puanlara göre sırala
 Profile -> Kullanıcıların kişisel bilgilerinin yer aldığı ve 'Ayarlar' alanına erişebildikleri ekran. Bu hafta basit bir profil ekranı tasarladım ve kullanıcı bilgilerinin yan ısıra içerisine XP, Günlük Seri gibi iki adet özellik ekledim. Bu bilgileri daha önce bahsettiğim sistem ile manuel olarak ekledim. Veritabanı entegrasyonunda sorun yaşamamak için temel inşa ettim.
 
 Ayarlar -> Profil ekranı içerisinden erişilebilen bu kısımda kullanıcı ayarları yer alacak. Ayarlar menüsü oluştururken diğer menülerden farklı olarak bir navigasyon ekranı olarak değil, ayrı bir ekran olarak projeye eklendi. Bunu '_layout.tsx' dosyasında Profile Tabs.Screen etiketinin içerisinde tanımlayarak sağladım, ayrıca bunu yapabilmek için ilgili dosyaya expo-router içinden useRouter'ı import etmem gerekti "import { useRouter } from 'expo-router';" tanımlaması ile. 
+
+## 3. Hafta: Ders Modülleri ve İçerik Tasarımı
+**Tarih:** 26.04.2026
+
+Bu hafta raporumda belirttiğim gibi ders modülleri ve içerik tasarımı aşamasına geçtim. Uygulamada modül olarak yer alacak programlama dili olarak Python'u seçtim. modal.tsx adında bir dosya oluşturarak bu dosya içerisine ders modüllerini ekledim. Bu dosyada bulunan LESSON_DATA sistemi sayesinde daha önce index.tsx dosyasında her bir konu için belirttiğim id sistemi sayesinde -örneğin id:1 Variables, id:2 Data Types gibi- bu konuların ayrı ayrı yönlendirmesini yapabildim.
+
+Uygulama içerisinden Journey sayfasında Variables butonuna basarsak Variables konu anlatımı, Data Types butonuna basarsak Data Types konu anlatımı karşımıza geliyor. Aslında butonların yönlendirmeleri modal.tsx dosyası olmasına rağmen id ile belirlenen konuya yönlendirme sağlayabiliyorum.
+
+Her bir konu için bir challange yer alıyor. Sıralama şu şekilde: Journey üzerinden konu seçimi -> Konu anlatımı -> Challange bilgisi -> Editör. Challange hakkında bilgileri kullanıcı okuduktan sonra editör sayfasına geçerek challange'ı tamamlamaya çalışıyor.
+
+Editör sayfası editor.tsx dosyasında bulunuyor. Pyodide Webview kullanarak Python çalıştıracak bir sistemi uygulama içerisine ekledim. Uygulamanın içerisinde çalışması performansı biraz düşüyor olsa da python programının çıktıları anlamında daha stabil bir sonuç veriyor. Şu anda editor içinde hazır bir python kodu ile karşılanıyor kullanıcı, ilerleyen haftalarda bu kodun yönlendirilen challange'a uygun düzenlemesini yapmayı planlıyorum. 
