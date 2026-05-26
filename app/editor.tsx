@@ -1,14 +1,21 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native';
+import {
+  View, Text, TextInput, TouchableOpacity,
+  StyleSheet, SafeAreaView, ActivityIndicator, ScrollView
+} from 'react-native';
 import { WebView } from 'react-native-webview';
+import { useLocalSearchParams } from 'expo-router';
+import { LESSON_DATA } from '@/constants/Lessons';
 
 export default function EditorScreen() {
-  const [code, setCode] = useState('print("Merhaba Codyverse!")\n\nfor i in range(3):\n    print(f"Döngü: {i}")');
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const lesson = LESSON_DATA[id ?? '1'];
+
+  const [code, setCode] = useState(lesson?.starterCode ?? '# Kodunuzu buraya yazın\n');
   const [output, setOutput] = useState('');
   const [isReady, setIsReady] = useState(false);
   const webviewRef = useRef<WebView>(null);
 
-  // GÜNCELLENEN KISIM: Hata yakalama ve indexURL eklendi
   const pyodideHtml = `
     <!DOCTYPE html>
     <html>
@@ -19,7 +26,6 @@ export default function EditorScreen() {
       <script>
         async function main() {
           try {
-            // İndirme adresi açıkça belirtildi
             let pyodide = await loadPyodide({
               indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/"
             });
@@ -32,7 +38,6 @@ export default function EditorScreen() {
                   import io
                   sys.stdout = io.StringIO()
                 \`);
-
                 await pyodide.runPythonAsync(event.data);
                 let output = pyodide.runPython("sys.stdout.getvalue()");
                 window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'output', data: output }));
@@ -45,7 +50,6 @@ export default function EditorScreen() {
                window.dispatchEvent(new MessageEvent('message', {data: event.data}));
             });
           } catch (err) {
-            // Eğer motor yüklenemezse React Native'e hatayı gönder
             window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'error', data: 'Motor Yükleme Hatası: ' + err.toString() }));
           }
         }
@@ -59,7 +63,7 @@ export default function EditorScreen() {
     const message = JSON.parse(event.nativeEvent.data);
     if (message.type === 'status' && message.data === 'ready') {
       setIsReady(true);
-      setOutput(''); // Hazır olduğunda terminali temizle
+      setOutput('');
     } else if (message.type === 'output' || message.type === 'error') {
       setOutput(message.data);
     }
@@ -67,15 +71,16 @@ export default function EditorScreen() {
 
   const runCode = () => {
     if (isReady && webviewRef.current) {
-      setOutput('Motor kodu işliyor...');
+      setOutput('Kod çalıştırılıyor...');
       webviewRef.current.postMessage(code);
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
+
+      {/* Gizli Pyodide Motoru */}
       <View style={{ height: 0, width: 0, opacity: 0 }}>
-        {/* GÜNCELLENEN KISIM: baseUrl ve domStorageEnabled eklendi */}
         <WebView
           ref={webviewRef}
           originWhitelist={['*']}
@@ -86,6 +91,7 @@ export default function EditorScreen() {
         />
       </View>
 
+      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerText}>Çalışma Alanı</Text>
         {!isReady && (
@@ -96,6 +102,15 @@ export default function EditorScreen() {
         )}
       </View>
 
+      {/* Challenge Kutusu */}
+      {lesson && (
+        <View style={styles.challengeBox}>
+          <Text style={styles.challengeTitle}>🎯 {lesson.challengeTitle}</Text>
+          <Text style={styles.challengeText}>{lesson.challengeText}</Text>
+        </View>
+      )}
+
+      {/* Kod Editörü */}
       <View style={styles.editorContainer}>
         <TextInput
           style={styles.input}
@@ -104,43 +119,91 @@ export default function EditorScreen() {
           autoCorrect={false}
           value={code}
           onChangeText={setCode}
-          placeholder="Python kodunuzu yazın..."
+          placeholder="Kodunuzu buraya yazın..."
           placeholderTextColor="#888"
         />
       </View>
 
+      {/* Çalıştır Butonu */}
       <TouchableOpacity
         style={[styles.button, !isReady && styles.buttonDisabled]}
         onPress={runCode}
         disabled={!isReady}
       >
         <Text style={styles.buttonText}>
-          {isReady ? 'RUN CODE' : 'LÜTFEN BEKLEYİN'}
+          {isReady ? '▶  KODU ÇALIŞTIR' : 'LÜTFEN BEKLEYİN'}
         </Text>
       </TouchableOpacity>
 
+      {/* Terminal */}
       <View style={styles.consoleContainer}>
         <Text style={styles.consoleHeader}>Terminal</Text>
         <Text style={styles.consoleOutput}>
           {output ? output : '>_ Çıktı bekleniyor...'}
         </Text>
       </View>
+
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#121212', padding: 15 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15, marginTop: 10 },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+    marginTop: 10
+  },
   headerText: { color: '#FFF', fontSize: 20, fontWeight: 'bold' },
   loadingContainer: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   loadingText: { color: '#00FFCC', fontSize: 12 },
-  editorContainer: { flex: 2, backgroundColor: '#1E1E2E', borderRadius: 10, padding: 15, marginBottom: 15 },
-  input: { flex: 1, color: '#FFF', fontSize: 16, fontFamily: 'monospace', textAlignVertical: 'top' },
-  button: { backgroundColor: '#00FFCC', paddingVertical: 15, borderRadius: 10, alignItems: 'center', marginBottom: 15 },
+
+  // Challenge kutusu
+  challengeBox: {
+    backgroundColor: '#1E1E2E',
+    borderRadius: 10,
+    padding: 14,
+    marginBottom: 12,
+    borderLeftWidth: 4,
+    borderLeftColor: '#00FFCC',
+  },
+  challengeTitle: { color: '#00FFCC', fontSize: 14, fontWeight: 'bold', marginBottom: 6 },
+  challengeText: { color: '#CCC', fontSize: 13, lineHeight: 20 },
+
+  editorContainer: {
+    flex: 2,
+    backgroundColor: '#1E1E2E',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 12
+  },
+  input: {
+    flex: 1,
+    color: '#FFF',
+    fontSize: 15,
+    fontFamily: 'monospace',
+    textAlignVertical: 'top'
+  },
+  button: {
+    backgroundColor: '#00FFCC',
+    paddingVertical: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginBottom: 12
+  },
   buttonDisabled: { backgroundColor: '#333' },
   buttonText: { color: '#121212', fontSize: 16, fontWeight: 'bold' },
-  consoleContainer: { flex: 1, backgroundColor: '#000', borderRadius: 10, padding: 15, borderWidth: 1, borderColor: '#333' },
+
+  consoleContainer: {
+    flex: 1,
+    backgroundColor: '#000',
+    borderRadius: 10,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: '#333'
+  },
   consoleHeader: { color: '#888', fontSize: 12, marginBottom: 10 },
-  consoleOutput: { color: '#00FFCC', fontSize: 14, fontFamily: 'monospace' }
+  consoleOutput: { color: '#00FFCC', fontSize: 14, fontFamily: 'monospace' },
 });
