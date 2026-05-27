@@ -10,6 +10,7 @@ Hasan Hüseyin KAYIK - 21040523
 | **1. Hafta** | 23.03.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-23032026-V1](https://www.youtube.com/watch?v=sEEcYnMdA-s) |
 | **2. Hafta** | 29.03.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-29032026-V2](https://www.youtube.com/watch?v=9QD9gnPqa7A) |
 | **3. Hafta** | 26.04.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-26042026-V3](https://www.youtube.com/watch?v=hcNHJQ3PawU) |
+| **4. Hafta** | 26.05.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-26052026-V4](https://youtu.be/gJXu1f543A0) |
 
 ---
 
@@ -65,3 +66,12 @@ Uygulama içerisinden Journey sayfasında Variables butonuna basarsak Variables 
 Her bir konu için bir challange yer alıyor. Sıralama şu şekilde: Journey üzerinden konu seçimi -> Konu anlatımı -> Challange bilgisi -> Editör. Challange hakkında bilgileri kullanıcı okuduktan sonra editör sayfasına geçerek challange'ı tamamlamaya çalışıyor.
 
 Editör sayfası editor.tsx dosyasında bulunuyor. Pyodide Webview kullanarak Python çalıştıracak bir sistemi uygulama içerisine ekledim. Uygulamanın içerisinde çalışması performansı biraz düşüyor olsa da python programının çıktıları anlamında daha stabil bir sonuç veriyor. Şu anda editor içinde hazır bir python kodu ile karşılanıyor kullanıcı, ilerleyen haftalarda bu kodun yönlendirilen challange'a uygun düzenlemesini yapmayı planlıyorum. 
+
+## 4. Hafta: Ders Modül Sistemi, Video ve Ders İçeriği Güncellemesi
+**Tarih:** 26.05.2026
+
+Bu hafta Journey ekranında bulunan Checkpoint'lerin -yani her bir konunun- ders içeriği kısmına Youtube üzerinden linke yönlendirilen bir alan ekledim. Bu sayede öğrenciler videolara yönlendirilerek daha kaliteli bir öğrenme süreci içinde yer alacaklar. Her bir Checkpoint için uygulama içi Python editöründe çalışan özel olarak tasarlanmış challange'lar yer alıyor. Bu challange'ı yaparak kullanıcı kod pratiği yapmış oluyor.
+
+Bu süreçte kullanılan video linkleri, kod editörü çalışmaları gibi özellikler projedeki Lessons.ts dosyası içinde PostgreSQL'e hızlıca aktarılabilecek şekilde tutuluyor, ilerleyen çalışmalarda veritabanına her biri Attribute olarak aktarılacak ve Veritabanı panelinden kontrol edilebilecek.
+
+Checkpointlerin içinde yer alan sekme yapısı ve Youtube link yönlendirmeleri projedeki app klasörünün içindeki modal.tsx dosyasında yer alıyor.
