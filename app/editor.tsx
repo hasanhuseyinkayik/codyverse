@@ -1,14 +1,16 @@
 import React, { useState, useRef } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
-  StyleSheet, SafeAreaView, ActivityIndicator, ScrollView
+  StyleSheet, SafeAreaView, ActivityIndicator, Alert
 } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { LESSON_DATA } from '@/constants/Lessons';
+import { moduleProgressStore } from '@/constants/ProgressStore';
 
 export default function EditorScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
   const lesson = LESSON_DATA[id ?? '1'];
 
   const [code, setCode] = useState(lesson?.starterCode ?? '# Kodunuzu buraya yazın\n');
@@ -64,7 +66,29 @@ export default function EditorScreen() {
     if (message.type === 'status' && message.data === 'ready') {
       setIsReady(true);
       setOutput('');
-    } else if (message.type === 'output' || message.type === 'error') {
+    } else if (message.type === 'output') {
+      const result = message.data.trim();
+      setOutput(result);
+
+      const expected = lesson?.expectedOutput?.trim();
+      if (expected && result === expected) {
+        moduleProgressStore.completeModule(Number(id), 16);
+        Alert.alert(
+          '🎉 Harika!',
+          'Doğru çıktıya ulaştın! Bir sonraki ders açıldı.',
+          [{
+            text: 'Devam Et',
+            onPress: () => router.push('/(tabs)/'),
+          }]
+        );
+      } else if (expected && result !== expected) {
+        Alert.alert(
+          '❌ Tekrar Dene',
+          'Çıktın beklenenle eşleşmiyor. Lütfen tekrar deneyiniz.',
+          [{ text: 'Tamam', style: 'default' }]
+        );
+      }
+    } else if (message.type === 'error') {
       setOutput(message.data);
     }
   };
@@ -159,8 +183,6 @@ const styles = StyleSheet.create({
   headerText: { color: '#FFF', fontSize: 20, fontWeight: 'bold' },
   loadingContainer: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   loadingText: { color: '#00FFCC', fontSize: 12 },
-
-  // Challenge kutusu
   challengeBox: {
     backgroundColor: '#1E1E2E',
     borderRadius: 10,
@@ -171,7 +193,6 @@ const styles = StyleSheet.create({
   },
   challengeTitle: { color: '#00FFCC', fontSize: 14, fontWeight: 'bold', marginBottom: 6 },
   challengeText: { color: '#CCC', fontSize: 13, lineHeight: 20 },
-
   editorContainer: {
     flex: 2,
     backgroundColor: '#1E1E2E',
@@ -195,7 +216,6 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: { backgroundColor: '#333' },
   buttonText: { color: '#121212', fontSize: 16, fontWeight: 'bold' },
-
   consoleContainer: {
     flex: 1,
     backgroundColor: '#000',

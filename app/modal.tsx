@@ -66,8 +66,15 @@ export default function ModalScreen() {
           <Text style={styles.title}>{lesson.title}</Text>
           <Text style={styles.explanation}>{lesson.explanation}</Text>
 
+          {/* Challenge Bölümü Başlığı */}
+          <View style={styles.challengeHeader}>
+            <View style={styles.challengeDivider} />
+            <Text style={styles.challengeHeaderText}>🎯 Challenge</Text>
+            <View style={styles.challengeDivider} />
+          </View>
+
           <View style={styles.challengeBox}>
-            <Text style={styles.challengeTitle}>🎯 {lesson.challengeTitle}</Text>
+            <Text style={styles.challengeTitle}>{lesson.challengeTitle}</Text>
             <Text style={styles.challengeText}>{lesson.challengeText}</Text>
           </View>
 
@@ -182,6 +189,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.75)',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  challengeHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 20,
+    gap: 10,
+  },
+  challengeDivider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#333',
+  },
+  challengeHeaderText: {
+    color: '#00FFCC',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   playIcon: { color: '#FFF', fontSize: 28, marginLeft: 4 },
   videoHint: { color: '#555', fontSize: 12, textAlign: 'center', marginTop: 12 },
