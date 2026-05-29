@@ -11,6 +11,7 @@ Hasan Hüseyin KAYIK - 21040523
 | **2. Hafta** | 29.03.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-29032026-V2](https://www.youtube.com/watch?v=9QD9gnPqa7A) |
 | **3. Hafta** | 26.04.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-26042026-V3](https://www.youtube.com/watch?v=hcNHJQ3PawU) |
 | **4. Hafta** | 26.05.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-26052026-V4](https://youtu.be/gJXu1f543A0) |
+| **5. Hafta** | 27.05.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-27052026-V5](https://www.youtube.com/watch?v=qfjXgbzScxU) |
 
 ---
 
@@ -75,3 +76,10 @@ Bu hafta Journey ekranında bulunan Checkpoint'lerin -yani her bir konunun- ders
 Bu süreçte kullanılan video linkleri, kod editörü çalışmaları gibi özellikler projedeki Lessons.ts dosyası içinde PostgreSQL'e hızlıca aktarılabilecek şekilde tutuluyor, ilerleyen çalışmalarda veritabanına her biri Attribute olarak aktarılacak ve Veritabanı panelinden kontrol edilebilecek.
 
 Checkpointlerin içinde yer alan sekme yapısı ve Youtube link yönlendirmeleri projedeki app klasörünün içindeki modal.tsx dosyasında yer alıyor.
+
+## 5. Hafta: Ders Modül Sistemi, Video ve Ders İçeriği Tamamlanması
+**Tarih:** 27.05.2026
+
+Bu çalışmada uygulamamızdaki ders modülleri ve ders içerikleri tamamlandı, son kullanıcının kullanabileceği hale getirildi. Uygulama içindeki Python Konsolu çıktıları kontrol edilmiyordu, her bir modül challange'ının kullanıcı çıktıları artık kontrol edilerek buna göre işlem yapılıyor. Proje dosyalarında constants/ProgressStore.ts dosyası oluşturularak her bir modülün üç farklı durumda bulunulması sağlandı: completed, current, locked. Bu sisteme bağlı olarak modüller tamamlanarak bir sonraki modüle geçilebilir hale getirildi. Bu sistem doğrudan kullanıcının output'unu kontrol ederek sistemin çalışmasına imkan sağlıyor.
+
+Modüllerdeki -checkpointlerdeki- yazılı konu anlatımları eksikti, çok daha detaylı yazılı ders içerikleri uygulama içine eklendi. Bu eklemeler henüz constant/Lessons.ts dosyasında saklansa da ilerleyen çalışmalarda doğrudan veri tabanına aktarılabilecek şekilde eklendi.
