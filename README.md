@@ -13,6 +13,7 @@ Hasan Hüseyin KAYIK - 21040523
 | **4. Hafta** | 26.05.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-26052026-V4](https://youtu.be/gJXu1f543A0) |
 | **5. Hafta** | 27.05.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-27052026-V5](https://www.youtube.com/watch?v=qfjXgbzScxU) |
 | **6. Hafta** | 28.05.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-28052026-V6](https://youtu.be/CFaPOfIcJyI) |
+| **7. Hafta** | 29.05.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-29052026-V7](https://youtu.be/GY-Dpuli_0k) |
 
 ---
 
@@ -101,3 +102,10 @@ django-cors-headers -> mobil uygulamanın backend'e erişebilmesi için
 Yerel dosyalarımda codyverse_backand diye bir klsaör açtım ve burada Django projesini başlattım ve içerisinde api klasörü oluştu. api klasörü içinde bulunan models.py dosyası içinde veritabanında bulunmasını istediğim 5 tabloyu ekledim; bu tablolar: User, Lesson, UserProgress, DailyChallange ve DailyChallengeLog tabloları. Bu tablolar için şimdilik belirli attribute'lar ekledim ancak ilerde eklemeler yapabilirim.
 
 Daha sonra oluşturduğum tabloların admin panelinden kontrol edilebilmesi için yerel dosyalarımdaki api/admin.py dosyasına da ekledim. Admin paneli olarak Django'nun standart admin panelini kullanmayı planlıyorum. Bu çalışma sonucunda kendi bilgisayarımda tarayıcıda 'http://127.0.0.1:8000/admin/' adresine gidildiğinde admin panelimiz açılıyor.
+
+## 7. Hafta: Django + PostreSQL Backend Kurulumu ve Railway Deploy
+**Tarih:** 29.05.2026
+
+Django kurulumunu tamamlamak için kullanıcı kayıt ve giriş işlemleri, ders listesi, kullanıcı ilerleme durumu, checkpoint tamamlama ve günün sorusu için ayrı ayrı adresler tanımladım. Bunları serializers.py ve views.py dosyaları içine ekledim; bu sayede React Native entegrasyonunu gerçekleştirebileceğiz -ancak ondan önce bu çalışmalarımızı Railway'e deploy etmem gerekiyordu. Bu yüzden dosyalarımı tamamladıktan sonra bu klasörleri ayrı bir Github projesine ekledim o projeye de [buradan - codyverse-backend](https://github.com/hasanhuseyinkayik/codyverse-backend) ulaşabilirsiniz hocam. Githuba backend dosyalarını yükledikten sonra Railway'e deploy etme aşamasına geçtim.
+
+Railway'e deploy etmek için Github hesabım ile giriş yaptım ve Github Repository seçeneği ile çalışmamı deploy ettim. Postgres ile web olmak üzere iki servis üzerinde çalışma yaptım. URL ile iki servisi birbirlerine bağladım ve ayarlamaları yaptım. Ardından superuser oluşturdum ve veritabanı için kendime tam yetki verdim. https://web-production-90cc1.up.railway.app/admin adresi üzerinden veritabanına giriş yaparak kullanıcı,ders ekleme/silme gibi tüm veritabanı işlemlerini yapabilir hale getirmiş oldum. Daha önce uygulamanın içine gömdüğüm tüm ders içeriklerini vb. kolaylıkla buradan veritabanına aktarabileceğim.
