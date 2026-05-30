@@ -12,6 +12,7 @@ Hasan Hüseyin KAYIK - 21040523
 | **3. Hafta** | 26.04.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-26042026-V3](https://www.youtube.com/watch?v=hcNHJQ3PawU) |
 | **4. Hafta** | 26.05.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-26052026-V4](https://youtu.be/gJXu1f543A0) |
 | **5. Hafta** | 27.05.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-27052026-V5](https://www.youtube.com/watch?v=qfjXgbzScxU) |
+| **6. Hafta** | 28.05.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-28052026-V6](https://youtu.be/CFaPOfIcJyI) |
 
 ---
 
@@ -83,3 +84,20 @@ Checkpointlerin içinde yer alan sekme yapısı ve Youtube link yönlendirmeleri
 Bu çalışmada uygulamamızdaki ders modülleri ve ders içerikleri tamamlandı, son kullanıcının kullanabileceği hale getirildi. Uygulama içindeki Python Konsolu çıktıları kontrol edilmiyordu, her bir modül challange'ının kullanıcı çıktıları artık kontrol edilerek buna göre işlem yapılıyor. Proje dosyalarında constants/ProgressStore.ts dosyası oluşturularak her bir modülün üç farklı durumda bulunulması sağlandı: completed, current, locked. Bu sisteme bağlı olarak modüller tamamlanarak bir sonraki modüle geçilebilir hale getirildi. Bu sistem doğrudan kullanıcının output'unu kontrol ederek sistemin çalışmasına imkan sağlıyor.
 
 Modüllerdeki -checkpointlerdeki- yazılı konu anlatımları eksikti, çok daha detaylı yazılı ders içerikleri uygulama içine eklendi. Bu eklemeler henüz constant/Lessons.ts dosyasında saklansa da ilerleyen çalışmalarda doğrudan veri tabanına aktarılabilecek şekilde eklendi.
+
+## 6. Hafta: Veritabanı Kurulumu
+**Tarih:** 28.05.2026
+
+Veritabanı için Django + PostgreSQL kullanmayı planlıyorum. Bu yüzden ilgili paketleri terminalde pip aracılığıyla kurdum:
+
+djangorestframework -> REST API için
+
+psycopg2-binary -> PostgreSQL bağlantısı için
+
+djangorestframework-simplejwt -> kullanıcı girişi için
+
+django-cors-headers -> mobil uygulamanın backend'e erişebilmesi için
+
+Yerel dosyalarımda codyverse_backand diye bir klsaör açtım ve burada Django projesini başlattım ve içerisinde api klasörü oluştu. api klasörü içinde bulunan models.py dosyası içinde veritabanında bulunmasını istediğim 5 tabloyu ekledim; bu tablolar: User, Lesson, UserProgress, DailyChallange ve DailyChallengeLog tabloları. Bu tablolar için şimdilik belirli attribute'lar ekledim ancak ilerde eklemeler yapabilirim.
+
+Daha sonra oluşturduğum tabloların admin panelinden kontrol edilebilmesi için yerel dosyalarımdaki api/admin.py dosyasına da ekledim. Admin paneli olarak Django'nun standart admin panelini kullanmayı planlıyorum. Bu çalışma sonucunda kendi bilgisayarımda tarayıcıda 'http://127.0.0.1:8000/admin/' adresine gidildiğinde admin panelimiz açılıyor.
