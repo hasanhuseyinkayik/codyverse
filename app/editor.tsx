@@ -1,22 +1,38 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
   StyleSheet, SafeAreaView, ActivityIndicator, Alert
 } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { LESSON_DATA } from '@/constants/Lessons';
-import { moduleProgressStore } from '@/constants/ProgressStore';
+import { useAuth } from '@/context/AuthContext';
+import { api } from '@/constants/api';
 
 export default function EditorScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const lesson = LESSON_DATA[id ?? '1'];
-
-  const [code, setCode] = useState(lesson?.starterCode ?? '# Kodunuzu buraya yazın\n');
+  const { token } = useAuth();
+  const [lesson, setLesson] = useState<any>(null);
+  const [code, setCode] = useState('# Kodunuzu buraya yazın\n');
   const [output, setOutput] = useState('');
   const [isReady, setIsReady] = useState(false);
   const webviewRef = useRef<WebView>(null);
+
+  useEffect(() => {
+    const fetchLesson = async () => {
+      try {
+        const data = await api.get('/lessons/', token!);
+        const found = data.find((l: any) => l.order === Number(id));
+        if (found) {
+          setLesson(found);
+          setCode(found.starter_code ?? '# Kodunuzu buraya yazın\n');
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchLesson();
+  }, [id]);
 
   const pyodideHtml = `
     <!DOCTYPE html>
@@ -32,7 +48,6 @@ export default function EditorScreen() {
               indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/"
             });
             window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'status', data: 'ready' }));
-
             window.addEventListener('message', async function(event) {
               try {
                 await pyodide.runPythonAsync(\`
@@ -47,7 +62,6 @@ export default function EditorScreen() {
                 window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'error', data: err.toString() }));
               }
             });
-
             document.addEventListener('message', function(event) {
                window.dispatchEvent(new MessageEvent('message', {data: event.data}));
             });
@@ -61,7 +75,7 @@ export default function EditorScreen() {
     </html>
   `;
 
-  const handleMessage = (event: any) => {
+  const handleMessage = async (event: any) => {
     const message = JSON.parse(event.nativeEvent.data);
     if (message.type === 'status' && message.data === 'ready') {
       setIsReady(true);
@@ -70,16 +84,14 @@ export default function EditorScreen() {
       const result = message.data.trim();
       setOutput(result);
 
-      const expected = lesson?.expectedOutput?.trim();
+      const expected = lesson?.expected_output?.trim();
       if (expected && result === expected) {
-        moduleProgressStore.completeModule(Number(id), 16);
+        // API'ye tamamlandı bildir
+        await api.post(`/lessons/${lesson.id}/complete/`, {}, token!);
         Alert.alert(
           '🎉 Harika!',
           'Doğru çıktıya ulaştın! Bir sonraki ders açıldı.',
-          [{
-            text: 'Devam Et',
-            onPress: () => router.push('/(tabs)/'),
-          }]
+          [{ text: 'Devam Et', onPress: () => router.push('/(tabs)/') }]
         );
       } else if (expected && result !== expected) {
         Alert.alert(
@@ -102,8 +114,6 @@ export default function EditorScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-
-      {/* Gizli Pyodide Motoru */}
       <View style={{ height: 0, width: 0, opacity: 0 }}>
         <WebView
           ref={webviewRef}
@@ -115,7 +125,6 @@ export default function EditorScreen() {
         />
       </View>
 
-      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerText}>Çalışma Alanı</Text>
         {!isReady && (
@@ -126,15 +135,13 @@ export default function EditorScreen() {
         )}
       </View>
 
-      {/* Challenge Kutusu */}
       {lesson && (
         <View style={styles.challengeBox}>
-          <Text style={styles.challengeTitle}>🎯 {lesson.challengeTitle}</Text>
-          <Text style={styles.challengeText}>{lesson.challengeText}</Text>
+          <Text style={styles.challengeTitle}>🎯 {lesson.challenge_title}</Text>
+          <Text style={styles.challengeText}>{lesson.challenge_text}</Text>
         </View>
       )}
 
-      {/* Kod Editörü */}
       <View style={styles.editorContainer}>
         <TextInput
           style={styles.input}
@@ -148,7 +155,6 @@ export default function EditorScreen() {
         />
       </View>
 
-      {/* Çalıştır Butonu */}
       <TouchableOpacity
         style={[styles.button, !isReady && styles.buttonDisabled]}
         onPress={runCode}
@@ -159,71 +165,31 @@ export default function EditorScreen() {
         </Text>
       </TouchableOpacity>
 
-      {/* Terminal */}
       <View style={styles.consoleContainer}>
         <Text style={styles.consoleHeader}>Terminal</Text>
         <Text style={styles.consoleOutput}>
           {output ? output : '>_ Çıktı bekleniyor...'}
         </Text>
       </View>
-
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#121212', padding: 15 },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-    marginTop: 10
-  },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, marginTop: 10 },
   headerText: { color: '#FFF', fontSize: 20, fontWeight: 'bold' },
   loadingContainer: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   loadingText: { color: '#00FFCC', fontSize: 12 },
-  challengeBox: {
-    backgroundColor: '#1E1E2E',
-    borderRadius: 10,
-    padding: 14,
-    marginBottom: 12,
-    borderLeftWidth: 4,
-    borderLeftColor: '#00FFCC',
-  },
+  challengeBox: { backgroundColor: '#1E1E2E', borderRadius: 10, padding: 14, marginBottom: 12, borderLeftWidth: 4, borderLeftColor: '#00FFCC' },
   challengeTitle: { color: '#00FFCC', fontSize: 14, fontWeight: 'bold', marginBottom: 6 },
   challengeText: { color: '#CCC', fontSize: 13, lineHeight: 20 },
-  editorContainer: {
-    flex: 2,
-    backgroundColor: '#1E1E2E',
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 12
-  },
-  input: {
-    flex: 1,
-    color: '#FFF',
-    fontSize: 15,
-    fontFamily: 'monospace',
-    textAlignVertical: 'top'
-  },
-  button: {
-    backgroundColor: '#00FFCC',
-    paddingVertical: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginBottom: 12
-  },
+  editorContainer: { flex: 2, backgroundColor: '#1E1E2E', borderRadius: 10, padding: 15, marginBottom: 12 },
+  input: { flex: 1, color: '#FFF', fontSize: 15, fontFamily: 'monospace', textAlignVertical: 'top' },
+  button: { backgroundColor: '#00FFCC', paddingVertical: 15, borderRadius: 10, alignItems: 'center', marginBottom: 12 },
   buttonDisabled: { backgroundColor: '#333' },
   buttonText: { color: '#121212', fontSize: 16, fontWeight: 'bold' },
-  consoleContainer: {
-    flex: 1,
-    backgroundColor: '#000',
-    borderRadius: 10,
-    padding: 15,
-    borderWidth: 1,
-    borderColor: '#333'
-  },
+  consoleContainer: { flex: 1, backgroundColor: '#000', borderRadius: 10, padding: 15, borderWidth: 1, borderColor: '#333' },
   consoleHeader: { color: '#888', fontSize: 12, marginBottom: 10 },
   consoleOutput: { color: '#00FFCC', fontSize: 14, fontFamily: 'monospace' },
 });
