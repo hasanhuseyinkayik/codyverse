@@ -15,6 +15,7 @@ Hasan Hüseyin KAYIK - 21040523
 | **6. Hafta** | 28.05.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-28052026-V6](https://youtu.be/CFaPOfIcJyI) |
 | **7. Hafta** | 29.05.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-29052026-V7](https://youtu.be/GY-Dpuli_0k) |
 | **8. Hafta** | 02.06.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-02062026-V8](https://youtu.be/o2ujWABX_ZI) |
+| **9. Hafta** | 04.06.2026 | [🔗 21040523-HasanHüseyinKayık-IOS2 Dersi-04062026-V9](https://youtu.be/8F_Dha7wtYU) |
 
 ---
 
@@ -129,3 +130,14 @@ app/(tabs)/index.tsx ve app/modal.tsx dosyaları API tabanlı ders sistemiyle g�
 app/editor.tsx içinde kullanıcı challenge çözümü backend’e gönderilerek ilerleme ve XP sistemi aktif hale getirildi.
 
 constants/Lessons.ts ve constants/ProgressStore.ts tamamen kaldırıldı, artık bu dosyalar yerine bilgiler veritabanından çekiliyor.
+
+
+## 9. Hafta: Daily Challange entegrasyonu
+**Tarih:** 04.06.2026
+
+
+Bu hafta Daily Challange özelliğini uygulamaya ve veritabanına entegre ettim. Sistem, veritabanında bulunan 'Daily Challanges' soru havuzundan günlük olarak soru çekiyor ve uygulama içinde bunu güncelliyor. Proje dosyalarındaki app/daily.tsx dosyası içinde fetchDaily adında bir değişken yardımıyla api'a get isteğinde bulunarak veritabanında bulunan soru havuzundan günlük olarak soru çekiliyor. Aynı şekilde Daily Challange ekranına da bir WebView olarak Python programlayıcısı ekledim, bu sayede ilgili challange'ı kullanıcı hemen o sayfada çözüp, kodu çalıştırabiliyor. Eğer kod doğru şekilde çalışıyorsa kullanıcı 50 XP kazanıyor.
+
+Ayrıca kullanıcıların XP kazanma sistemine eklemeler yaptım. Journey ekranında bulunan her bir checkpoint çözüldüğünde kullanıcı 100 XP kazanıyor. Daily challange ekranındaki soru çözüldüğünde kullanıcı 50 XP kazanıyor. Bunun yanı sıra 'Seri Sistemi' eklendi, kullanıcılar belirli gün arka arkaya sisteme girdiklerinde seri oluşturarak bunu profillerinde görebiliyorlar.
+
+Profil ekranında ufak düzenlemeler yaptım. Artık kullanıcı adı, eklenmiş ise üniversite adı, deneyim puanı -XP-, günlük seri sayısı ve çıkış yap butonu burada bulunuyor. Sade ve işlevsel bir tasarım tercih ettim.
